@@ -5,12 +5,19 @@ var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var port = process.env.PORT || 8080;
 var User = require('./app/models/user');
+<<<<<<< HEAD
 var login = require('login');
 
 /*Grab info from Posts*/
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 /*App Config*/
+=======
+
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+
+>>>>>>> 7782ff1fa28af6412de57d81cc19abf94260c166
 app.use(function(req, res, next){
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
@@ -18,6 +25,7 @@ app.use(function(req, res, next){
     next();
 });
 
+<<<<<<< HEAD
 /*Logs to console*/
 app.use(morgan('dev'));
 
@@ -25,10 +33,15 @@ app.use(morgan('dev'));
 mongoose.connect('mongodb://michael:michael1@proximus.modulusmongo.net:27017/pYd7opus');
 
 /*Routes*/
+=======
+app.use(morgan('dev'));
+
+>>>>>>> 7782ff1fa28af6412de57d81cc19abf94260c166
 app.get('/', function(req,res){
    res.send('Home');
 });
 
+<<<<<<< HEAD
 app.render('email', function(err, html){
   // ...
 });
@@ -131,6 +144,20 @@ apiRouter.route('/users')
 		});
 	});
 */
+=======
+var apiRouter = express.Router();
+
+apiRouter.get('/', function(req,res){
+   res.send('Im a user');
+});
+
+app.route('/login')
+.get(function(req,res){
+    res.send('starting login form');
+});
+
+//mongoose.connect();
+>>>>>>> 7782ff1fa28af6412de57d81cc19abf94260c166
 
 app.listen(port);
 app.use('/api',apiRouter);
