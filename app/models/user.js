@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt-nodejs');
 
+
 var UserSchema = new Schema({
     name: String,
     username: { type: String, required: true, index: { unique: true }},
@@ -21,7 +22,10 @@ UserSchema.pre('save', function(next) {
         user.password = hash;
         next(); 
     });
+    console.log("Inside model"+user.name + user.username);
 });
+
+
 
 // method to compare a given password with the database hash
 UserSchema.methods.comparePassword = function(password) { 

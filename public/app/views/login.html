@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Page Title</title>
+</head>
+	 <link href="../../assets/css/login.css" rel="stylesheet" media="screen">
+	 <link href="../../assets/libs/bootstrap/dist/css/bootstrap.css" rel="stylesheet" media="screen">
+	 <link href="../../assets/css/animate.css" rel="stylesheet" media="screen">
+	 <link href="../../assets/fonts/font-awesome.css" rel="stylesheet">
+<body>
+	<div class="container" ng-Controller="LoginController">
+		<div class="row">
+			<div style="margin-left: 4%;"
+				class="col-md-push-3 col-md-5 col-sm-push-3 col-sm-6 col-sx-12 animated flipInY">
+				<!-- Header start -->
+				<header>
+					<!-- Logo start -->
+					<a href="index.html" class="logo">EasyDay</a>
+					<!-- Logo end -->
+				</header>
+				<!-- Header end -->
+				<div class="login-container">
+					<div class="flat-form">
+						<ul class="tabs">
+							<li><a href="#login" class="active">Ingresar</a></li>
+							<li><a ng-click="getLocation()" href="#register">Registrar</a></li>
+						</ul>
+						<div id="login" class="form-action show animated bounceInDown">
+							<h1>Ingresar</h1>
+							<p>Bienvenido a EasyDay.</p>
+							<form>
+								<ul>
+									<li><input type="text" ng-model="user.email"
+										placeholder="Usuario" /></li>
+									<li><input type="password" ng-model="user.password"
+										placeholder="Contraseña" /></li>
+								</ul>
+								<div class="panel-body">
+									<p class="btn-stack no-margin">
+										<button type="button" ng-click="checkLoginEmpleado()" 
+										class="btn button btn-block">Ingresar como empleado</button>
+										<button type="button" ng-click="checkLoginEmpresa()"
+										class="btn button btn-block">Ingresar como empresa</button>
+									</p>
+								</div>
+							</form>
+						</div>
+						<!--/#login.form-action-->
+						<div id="register" class="form-action hide animated flipInY" style="width: 240%;margin-left: 70px">
+								<div form-Registrar-Empresa></div>
+					</div>
+			
+	 				<div class="social-buttons">
+						<h5>-- Utilice nuestros servicios --</h5>
+						<p class="center-align-text btn-stack">
+							<a href="roomeetExterno" class="btn btn-success">Roomeet</a> 
+							<a href="smarkingExterno" class="btn btn-warning">Smarking</a> 
+							<a href="kidsReckExterno" class="btn btn-info">KisdReck</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script src="../../assets/js/jquery.js"></script>
+<script type="text/javascript">
+	(function($) {
+		// constants
+		var SHOW_CLASS = 'show', HIDE_CLASS = 'hide', ACTIVE_CLASS = 'active';
+
+		$('.tabs').on(
+				'click',
+				'li a',
+				function(e) {
+					e.preventDefault();
+					var $tab = $(this), href = $tab.attr('href');
+
+					$('.active').removeClass(ACTIVE_CLASS);
+					$tab.addClass(ACTIVE_CLASS);
+
+					$('.show').removeClass(SHOW_CLASS).addClass(HIDE_CLASS)
+							.hide();
+
+					$(href).removeClass(HIDE_CLASS).addClass(SHOW_CLASS).hide()
+							.fadeIn(550);
+				});
+	})(jQuery);
+</script>
+<script src="../../assets/libs/angular/angular.js"></script>
+<script src="../../assets/libs/bootstrap/dist/js/bootstrap.js"></script>
+</html>
+

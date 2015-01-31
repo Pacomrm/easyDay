@@ -1,137 +1,44 @@
-var express = require('express'),
-    app = express();
-var mongoose = require('mongoose');
-var bodyParser = require('body-parser');
-var morgan = require('morgan');
-var port = process.env.PORT || 8080;
-var User = require('./app/models/user');
-var login = require('login');
+// BASE SETUP
+// ======================================
 
-/*Grab info from Posts*/
-app.use(bodyParser.urlencoded({extended: true}));
+// PACKAGES --------------------
+var express    = require('express');		// call express
+var app        = express(); 				// define our app using express
+var bodyParser = require('body-parser'); 	// get body-parser
+var morgan     = require('morgan'); 		// used to see requests
+var mongoose   = require('mongoose');
+var config 	   = require('./config');
+var path 	   = require('path');
+
+
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-/*App Config*/
-app.use(function(req, res, next){
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, \ Authorization');
-    next();
+// configure our app to handle CORS requests
+app.use(function(req, res, next) {
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
+	next();
 });
-
-/*Logs to console*/
 app.use(morgan('dev'));
 
-/*DB connection*/
-mongoose.connect('mongodb://michael:michael1@proximus.modulusmongo.net:27017/pYd7opus');
+mongoose.connect(config.database); 
 
-/*Routes*/
-app.get('/', function(req,res){
-   res.send('Home');
+app.use(express.static(__dirname + '/public'));
+
+// API ROUTES ------------------------
+var apiRoutes = require('./app/routes/api')(app, express);
+app.use('/api', apiRoutes);
+
+// MAIN CATCHALL ROUTE --------------- 
+// SEND USERS TO FRONTEND ------------
+// has to be registered after API ROUTES
+app.get('*', function(req, res) {
+	res.sendFile(path.join(__dirname + '/public/app/views/login.html'));
 });
 
-app.render('email', function(err, html){
-  // ...
-});
-
-//app.set('title','login');
-/*
-app.get('/login', function(req,res){
-        res.render('login')
-        console.log("View login");
-});*/
-    
-
-var apiRouter = express.Router();
-/*Loggin function validation*/
-apiRouter.use(function(req,res, next){
-
-    console.log('autenticacion users');
-    next();
-});
-
-apiRouter.get('/', function(req,res){
-    res.json({message: 'Welcome to our api!'});
-    
-});
-
-apiRouter.route('/users')
-    .post(function(req, res){
-    
-    var user = new User();
-    user.name = req.body.name;
-    user.username = req.body.username;
-    user.password = req.body.password;
-    
-    user.save(function(err){
-        console.log('Inside SAVE');
-        if(err){
-            if(err.code == 11000){
-                return res.json({ success: false, message: 'A user with that already exists.'});
-            }else
-            return res.send(err);
-        }
-        res.json({message: 'User created!'});
-    });
-    
-})
-	// get all the users (accessed at GET http://localhost:8080/api/users)
-	.get(function(req, res) {
-		User.find(function(err, users) {
-			if (err) return res.send(err);
-
-			// return the users
-			res.json(users);
-		});
-	});
-
-// on routes that end in /users/:user_id
-// ----------------------------------------------------
-/*apiRouter.route('/users/:user_id')
-
-	// get the user with that id
-	.get(function(req, res) {
-		User.findById(req.params.user_id, function(err, user) {
-			if (err) return res.send(err);
-
-			// return that user
-			res.json(user);
-		});
-	})
-
-	// update the user with this id
-	.put(function(req, res) {
-		User.findById(req.params.user_id, function(err, user) {
-
-			if (err) return res.send(err);
-
-			// set the new user information if it exists in the request
-			if (req.body.name) user.name = req.body.name;
-			if (req.body.username) user.username = req.body.username;
-			if (req.body.password) user.password = req.body.password;
-
-			// save the user
-			user.save(function(err) {
-				if (err) return res.send(err);
-
-				// return a message
-				res.json({ message: 'User updated!' });
-			});
-
-		});
-	})
-
-	// delete the user with this id
-	.delete(function(req, res) {
-		User.remove({
-			_id: req.params.user_id
-		}, function(err, user) {
-			if (err) return res.send(err);
-
-			res.json({ message: 'Successfully deleted' });
-		});
-	});
-*/
-
-app.listen(port);
-app.use('/api',apiRouter);
+// START THE SERVER
+// ====================================
+app.listen(config.port);
+console.log('Magic happens on port ' + config.port);
