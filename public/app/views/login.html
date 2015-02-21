@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+	<!DOCTYPE html>
 <html>
 <head>
   <title>Page Title</title>
@@ -8,7 +8,7 @@
 	 <link href="../../assets/css/animate.css" rel="stylesheet" media="screen">
 	 <link href="../../assets/fonts/font-awesome.css" rel="stylesheet">
 <body>
-	<div class="container" ng-Controller="LoginController">
+	<div class="container" ng-Controller="loginController">
 		<div class="row">
 			<div style="margin-left: 4%;"
 				class="col-md-push-3 col-md-5 col-sm-push-3 col-sm-6 col-sx-12 animated flipInY">
@@ -22,26 +22,28 @@
 				<div class="login-container">
 					<div class="flat-form">
 						<ul class="tabs">
-							<li><a href="#login" class="active">Ingresar</a></li>
-							<li><a ng-click="getLocation()" href="#register">Registrar</a></li>
+							<li><a ui-sref="login" class="active">Ingresar</a></li>
+							<li><a ng-click="getLocation()" ui-sref="login.register">Registrar</a></li>
 						</ul>
 						<div id="login" class="form-action show animated bounceInDown">
 							<h1>Ingresar</h1>
 							<p>Bienvenido a EasyDay.</p>
-							<form>
+							<form ng-submit="login.doLogin()">
 								<ul>
-									<li><input type="text" ng-model="user.email"
+									<li><input type="text" ng-model="login.loginData.username"
 										placeholder="Usuario" /></li>
-									<li><input type="password" ng-model="user.password"
+									<li><input type="password" ng-model="login.loginData.password"
 										placeholder="Contraseña" /></li>
 								</ul>
 								<div class="panel-body">
 									<p class="btn-stack no-margin">
-										<button type="button" ng-click="checkLoginEmpleado()" 
-										class="btn button btn-block">Ingresar como empleado</button>
-										<button type="button" ng-click="checkLoginEmpresa()"
-										class="btn button btn-block">Ingresar como empresa</button>
+										<button type="submit" ng-if="!login.processing"
+										class="btn button btn-block">Ingresar</button>
 									</p>
+								</div>
+
+								<div class="alert alert-danger" ng-if="login.error">
+									{{ login.error }}
 								</div>
 							</form>
 						</div>
@@ -53,9 +55,9 @@
 	 				<div class="social-buttons">
 						<h5>-- Utilice nuestros servicios --</h5>
 						<p class="center-align-text btn-stack">
-							<a href="roomeetExterno" class="btn btn-success">Roomeet</a> 
-							<a href="smarkingExterno" class="btn btn-warning">Smarking</a> 
-							<a href="kidsReckExterno" class="btn btn-info">KisdReck</a>
+							<a ui-sref="roomeetExterno" class="btn btn-success">Roomeet</a> 
+							<a ui-sref="smarkingExterno" class="btn btn-warning">Smarking</a> 
+							<a ui-sref="kidsReckExterno" class="btn btn-info">KisdReck</a>
 						</p>
 					</div>
 				</div>

@@ -12,7 +12,6 @@ module.exports = function(app, express) {
 
 	// route to authenticate a user (POST http://localhost:8080/api/authenticate)
 	apiRouter.post('/authenticate', function(req, res) {
-		console.log(req.body.username);
 
 	  // find the user
 	  User.findOne({
@@ -57,32 +56,34 @@ module.exports = function(app, express) {
 	// route middleware to verify a token
 	apiRouter.use(function(req, res, next) {
 		// do logging
-		console.log('Somebody just came to our app!');
+		console.log('Somebody just came to our app!'+ req);
 
 	  // check header or url parameters or post parameters for token
-	  var token = req.body.token || req.param('token') || req.headers['x-access-token'];
+	  var token = req.body.token || req.params('token') || req.headers['x-access-token'];
 
 	  // decode token
 	  if (token) {
 
 	    // verifies secret and checks exp
 	    jwt.verify(token, superSecret, function(err, decoded) {      
-	      if (err)
-	        return res.json({ success: false, message: 'Failed to authenticate token.' });    
-	      else
+
+	      if (err) {
+	        res.status(403).send({ success: false, message: 'Failed to authenticate token.' });  	   
+	      } else { 
 	        // if everything is good, save to request for use in other routes
-	        req.decoded = decoded;    
+	        req.decoded = decoded;
+	            
+	        next(); // make sure we go to the next routes and don't stop here
+	      }
 	    });
 
 	  } else {
 
 	    // if there is no token
 	    // return an HTTP response of 403 (access forbidden) and an error message
-   	 	return res.status(403).send({ success: false, message: 'No token provided.' });
+   	 	res.status(403).send({ success: false, message: 'No token provided.' });
 	    
 	  }
-
-	  next(); // make sure we go to the next routes and don't stop here
 	});
 
 	// test route to make sure everything is working 
@@ -120,7 +121,8 @@ module.exports = function(app, express) {
 
 		// get all the users (accessed at GET http://localhost:8080/api/users)
 		.get(function(req, res) {
-			User.find(function(err, users) {
+
+			User.find({}, function(err, users) {
 				if (err) res.send(err);
 
 				// return the users
@@ -136,7 +138,7 @@ module.exports = function(app, express) {
 		.get(function(req, res) {
 			User.findById(req.params.user_id, function(err, user) {
 				if (err) res.send(err);
-                console.log("Mop " + user);
+
 				// return that user
 				res.json(user);
 			});
@@ -174,6 +176,11 @@ module.exports = function(app, express) {
 				res.json({ message: 'Successfully deleted' });
 			});
 		});
+
+	// api endpoint to get user information
+	apiRouter.get('/me', function(req, res) {
+		res.send(req.decoded);
+	});
 
 	return apiRouter;
 };

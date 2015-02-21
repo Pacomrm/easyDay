@@ -1,20 +1,27 @@
-// BASE SETUP
-// ======================================
 
-// PACKAGES --------------------
-var express    = require('express');		// call express
-var app        = express(); 				// define our app using express
-var bodyParser = require('body-parser'); 	// get body-parser
-var morgan     = require('morgan'); 		// used to see requests
+/**
+ * @name EasyDay
+ * @author EasyDay Team
+ * @description App for companies facilities.
+ * @version 0.1.1 
+ */
+
+/* Packages for our app */
+var express    = require('express');		
+var app        = express(); 				
+var bodyParser = require('body-parser'); 	
+var morgan     = require('morgan'); 		
 var mongoose   = require('mongoose');
-var config 	   = require('./config');
+var config 	   = require('./app/config.js');
 var path 	   = require('path');
-
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// configure our app to handle CORS requests
+/**
+ * Configure our app to handle CORS requests
+ * Don't forget the "next()" method so we can continue with the routes!
+ */
 app.use(function(req, res, next) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
@@ -23,22 +30,27 @@ app.use(function(req, res, next) {
 });
 app.use(morgan('dev'));
 
+/* DB connection */
 mongoose.connect(config.database); 
 
+/** Set the static route to our public files */
 app.use(express.static(__dirname + '/public'));
 
 // API ROUTES ------------------------
 var apiRoutes = require('./app/routes/api')(app, express);
 app.use('/api', apiRoutes);
 
-// MAIN CATCHALL ROUTE --------------- 
-// SEND USERS TO FRONTEND ------------
-// has to be registered after API ROUTES
+/**
+ * Main route to our app.
+ * @return {[login.html]}
+ * This needs to be after our api Routes.
+ */
 app.get('*', function(req, res) {
-	res.sendFile(path.join(__dirname + '/public/app/views/login.html'));
+	res.sendFile(path.join(__dirname + '/public/app/views/index.html'));
 });
 
-// START THE SERVER
-// ====================================
+/**
+ * Start our server.
+ */
 app.listen(config.port);
 console.log('Magic happens on port ' + config.port);

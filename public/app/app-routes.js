@@ -1,34 +1,28 @@
-// inject ngRoute for all our routing needs
-angular.module('uiRoutes', ['ui-router'])
+angular.module('uiRoutes', ['ui.router'])
 
-// configure our routes
+
 .config(function($stateProvider, $urlRouterProvider) {
-  // 
-  // For any unmatched url, redirect to /state1 
-  $urlRouterProvider.otherwise("/state1");
-  // 
-  // Now set up the states 
+   
+  console.log("Routes working!");
+  $urlRouterProvider.otherwise("/home"); 
+
   $stateProvider
-    .state('state1', {
-      url: "/state1",
-      templateUrl: "partials/state1.html"
+    .state('login', {
+      url: "/login",
+      templateUrl : 'app/views/login.html',
+      controller  : 'loginController',
+      controllerAs: 'login'
     })
-    .state('state1.list', {
-      url: "/list",
-      templateUrl: "partials/state1.list.html",
-      controller: function($scope) {
-        $scope.items = ["A", "List", "Of", "Items"];
-      }
+    .state('home',{
+      url: "/home",
+      templateUrl : 'app/views/index.html',
+      controller  : 'loginController',
+      controllerAs: 'login'  
     })
-    .state('state2', {
-      url: "/state2",
-      templateUrl: "partials/state2.html"
-    })
-    .state('state2.list', {
-      url: "/list",
-      templateUrl: "partials/state2.list.html",
-      controller: function($scope) {
-        $scope.things = ["A", "Set", "Of", "Things"];
-      }
+    .state('rideOn',{
+      url: "/rideOn",
+      templateUrl : 'app/views/rideOn/all.html',
+      controller  : 'rideOnController',
+      controllerAs: 'rideOn'  
     });
 });
