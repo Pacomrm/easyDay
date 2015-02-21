@@ -96,13 +96,13 @@ module.exports = function(app, express) {
 	// ----------------------------------------------------
 	apiRouter.route('/users')
 
-		// create a user (accessed at POST http://localhost:8080/users)
+		
 		.post(function(req, res) {
 			
-			var user = new User();		// create a new instance of the User model
-			user.name = req.body.name;  // set the users name (comes from the request)
-			user.username = req.body.username;  // set the users username (comes from the request)
-			user.password = req.body.password;  // set the users password (comes from the request)
+			var user = new User();		
+			user.name = req.body.name;  
+			user.username = req.body.username;  
+			user.password = req.body.password;  
 
 			user.save(function(err) {
 				if (err) {
